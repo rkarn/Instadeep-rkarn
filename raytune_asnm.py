@@ -93,7 +93,7 @@ def tune_ASNM(config):
 
     # Enable Tune to make intermediate decisions by using a Tune Callback hook. This is Keras specific.
     callbacks = [checkpoint_callback, TuneReporterCallback()]
-    task_dataset = pickle.load(open('task_dataset.pkl', "rb"))
+    task_dataset = pickle.load(open('/app/task_dataset.pkl', "rb"))
     X_train = task_dataset[0]
     Y_train = task_dataset[1]
     X_test = task_dataset[2]
@@ -149,9 +149,9 @@ def random_search(task_data, task_id=0):
     print("You can use any of the following columns to get the best model: \n{}.".format(
         [k for k in analysis.dataframe() if k.startswith("keras_info")]))
     print("=" * 10)
-    logdir = analysis.get_best_logdir("keras_info/val_acc", mode="max")
-    print('Best model:',analysis.get_best_trial(metric='keras_info/val_acc', mode='max'), 
-          'lr:', analysis.get_best_config(metric='keras_info/val_acc', mode='max')['lr'], 'dense_1:', analysis.get_best_config(metric='keras_info/val_acc', mode='max')['dense_1'], 'dense_2:', analysis.get_best_config(metric='keras_info/val_acc', mode='max')['dense_2']        )
+    logdir = analysis.get_best_logdir("keras_info/val_accuracy", mode="max")
+    print('Best model:',analysis.get_best_trial(metric='keras_info/val_accuracy', mode='max'), 
+          'lr:', analysis.get_best_config(metric='keras_info/val_accuracy', mode='max')['lr'], 'dense_1:', analysis.get_best_config(metric='keras_info/val_accuracy', mode='max')['dense_1'], 'dense_2:', analysis.get_best_config(metric='keras_info/val_accuracy', mode='max')['dense_2']        )
     # We saved the model as `model.h5` in the logdir of the trial.
     from tensorflow.keras.models import load_model
     tuned_model = load_model(logdir + "/model.h5", custom_objects =  {'f1_m': f1_m, 'precision_m': precision_m, 'recall_m': recall_m})
@@ -620,7 +620,7 @@ def measure_CPU_Mem():
         time.sleep(1)
 
 import multiprocessing
-task_list = create_task('asnm_nbpo_tasks.pkl')
+task_list = create_task('reduced_asnm_nbpo_tasks.pkl')
 num_tasks=5
 Model_Perf_save = {}
 Model_Perf_save['tr_acc'] = []
@@ -644,7 +644,7 @@ for search_algo in [random_search,
     cpu_mem_collection.start()
     start_time = time.time()
     for task_id in range(0,num_tasks):
-        f = open('task_dataset.pkl', 'wb')
+        f = open('/app/task_dataset.pkl', 'wb')
         pickle.dump(task_list[task_id], f)
         f.close()
         hyper_param = search_algo(task_list[task_id], task_id)

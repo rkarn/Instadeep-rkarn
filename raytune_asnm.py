@@ -129,6 +129,7 @@ def random_search(task_data, task_id=0):
         ray.init(
             address=os.environ.get("RAY_SERVER", "auto"),
             _redis_password=os.environ.get("REDIS_PASSWORD", ""),
+            ignore_reinit_error=True
         )
     else:
         # according to the docs local_mode, if true, forces serial execution which is meant for debugging

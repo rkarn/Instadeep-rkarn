@@ -125,8 +125,16 @@ def random_search(task_data, task_id=0):
         "The hyperparameter space is not fully designated. It must include all of {}".format(HP_KEYS))
     ######################################################################################################
 
-    ray.shutdown()  # Restart Ray defensively in case the ray connection is lost. 
-    ray.init(log_to_driver=False)
+    if "REDIS_PASSWORD" in os.environ:
+        ray.init(
+            address=os.environ.get("RAY_SERVER", "auto"),
+            _redis_password=os.environ.get("REDIS_PASSWORD", ""),
+        )
+    else:
+        # according to the docs local_mode, if true, forces serial execution which is meant for debugging
+        # unfortunately, it also allows requests for resources such as GPUs to subsequently ignore them without
+        # any error or warning
+        ray.init()
     analysis = tune.run(
         tune_ASNM, 
         name="Random_ASNM_task"+str(task_id),
@@ -176,8 +184,16 @@ def mutation_pbtsearch(task_data, task_id=0):
     )
 
     
-    ray.shutdown()  # Restart Ray defensively in case the ray connection is lost. 
-    ray.init(log_to_driver=False)
+    if "REDIS_PASSWORD" in os.environ:
+        ray.init(
+            address=os.environ.get("RAY_SERVER", "auto"),
+            _redis_password=os.environ.get("REDIS_PASSWORD", ""),
+        )
+    else:
+        # according to the docs local_mode, if true, forces serial execution which is meant for debugging
+        # unfortunately, it also allows requests for resources such as GPUs to subsequently ignore them without
+        # any error or warning
+        ray.init()
     analysis = tune.run(
         tune_ASNM,
         name="PBT_ASNM_task"+str(task_id),
@@ -218,8 +234,16 @@ def mutation_pbtsearch(task_data, task_id=0):
 #ASHA Schedular
 def ASHA_search(task_data, task_id=0):
     from ray.tune.schedulers import ASHAScheduler
-    ray.shutdown()  # Restart Ray defensively in case the ray connection is lost. 
-    ray.init(log_to_driver=False)
+    if "REDIS_PASSWORD" in os.environ:
+        ray.init(
+            address=os.environ.get("RAY_SERVER", "auto"),
+            _redis_password=os.environ.get("REDIS_PASSWORD", ""),
+        )
+    else:
+        # according to the docs local_mode, if true, forces serial execution which is meant for debugging
+        # unfortunately, it also allows requests for resources such as GPUs to subsequently ignore them without
+        # any error or warning
+        ray.init()
     custom_scheduler = ASHAScheduler(
         metric='mean_accuracy',
         mode="max",
@@ -281,7 +305,16 @@ def hyperopt_search(task_data, task_id=0):
     
     algo = HyperOptSearch(points_to_evaluate=current_best_params)
     algo = ConcurrencyLimiter(algo, max_concurrent=4)
-    
+    if "REDIS_PASSWORD" in os.environ:
+        ray.init(
+            address=os.environ.get("RAY_SERVER", "auto"),
+            _redis_password=os.environ.get("REDIS_PASSWORD", ""),
+        )
+    else:
+        # according to the docs local_mode, if true, forces serial execution which is meant for debugging
+        # unfortunately, it also allows requests for resources such as GPUs to subsequently ignore them without
+        # any error or warning
+        ray.init()
     analysis =tune.run(tune_ASNM,
         name="hyperopt_search"+str(task_id), verbose = 1,
         scheduler=scheduler,
@@ -330,7 +363,16 @@ def BayesOptSearch(task_data, task_id=0):
         "xi": 0.0
         }, metric = 'mean_accuracy', mode = 'max'), 
         max_concurrent=4)
-   
+    if "REDIS_PASSWORD" in os.environ:
+        ray.init(
+            address=os.environ.get("RAY_SERVER", "auto"),
+            _redis_password=os.environ.get("REDIS_PASSWORD", ""),
+        )
+    else:
+        # according to the docs local_mode, if true, forces serial execution which is meant for debugging
+        # unfortunately, it also allows requests for resources such as GPUs to subsequently ignore them without
+        # any error or warning
+        ray.init()
     analysis =tune.run(tune_ASNM,
         name="BayesOptSearch_ASNM_task"+str(task_id), verbose = 1,
         scheduler=scheduler,
@@ -379,7 +421,16 @@ def NeverGradSearch(task_data, task_id=0):
         # space=space,  # If you want to set the space manually
     )
     algo = ConcurrencyLimiter(algo, max_concurrent=4)
-    
+    if "REDIS_PASSWORD" in os.environ:
+        ray.init(
+            address=os.environ.get("RAY_SERVER", "auto"),
+            _redis_password=os.environ.get("REDIS_PASSWORD", ""),
+        )
+    else:
+        # according to the docs local_mode, if true, forces serial execution which is meant for debugging
+        # unfortunately, it also allows requests for resources such as GPUs to subsequently ignore them without
+        # any error or warning
+        ray.init()
     analysis =tune.run(tune_ASNM,
         name="NeverGradSearch"+str(task_id), verbose = 1,
         scheduler=scheduler,
@@ -424,7 +475,16 @@ def OptunaSearch(task_data, task_id=0):
     algo = OptunaSearch(metric="mean_accuracy",
         mode="max")
     algo = ConcurrencyLimiter(algo, max_concurrent=4)
-    ! rm -rf ~/ray_results/BayesOptSearch_ASNM_task$task_id
+    if "REDIS_PASSWORD" in os.environ:
+        ray.init(
+            address=os.environ.get("RAY_SERVER", "auto"),
+            _redis_password=os.environ.get("REDIS_PASSWORD", ""),
+        )
+    else:
+        # according to the docs local_mode, if true, forces serial execution which is meant for debugging
+        # unfortunately, it also allows requests for resources such as GPUs to subsequently ignore them without
+        # any error or warning
+        ray.init()
     analysis =tune.run(tune_ASNM,
         name="OptunaSearch"+str(task_id), verbose = 1,
         scheduler=scheduler,
@@ -476,7 +536,16 @@ def ZOOptSearch(task_data, task_id=0):
         # dim_dict=space,  # If you want to set the space yourself
         **zoopt_search_config)
 
-    
+    if "REDIS_PASSWORD" in os.environ:
+        ray.init(
+            address=os.environ.get("RAY_SERVER", "auto"),
+            _redis_password=os.environ.get("REDIS_PASSWORD", ""),
+        )
+    else:
+        # according to the docs local_mode, if true, forces serial execution which is meant for debugging
+        # unfortunately, it also allows requests for resources such as GPUs to subsequently ignore them without
+        # any error or warning
+        ray.init()
     analysis =tune.run(tune_ASNM,
         name="ZOOptSearch"+str(task_id), verbose = 1,
         scheduler=scheduler,

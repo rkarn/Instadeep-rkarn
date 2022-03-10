@@ -1,0 +1,25 @@
+operator: ray
+docker:
+  image: raytune-pong
+  dockerfile: ./Dockerfile
+  context: .
+spec:
+  command: "python main.py"
+  rayVersion: "v1.2.0"
+  job:
+    cpus: 2
+    gpus: 0
+    ramRatio: "2"
+    gpuType: "gpu"
+    ports: []
+  head:
+    cpus: 8
+    gpus: 0
+    ramRatio: "3"
+    gpuType: "gpu"
+  workerPools:
+    - name: cpu-1
+      count: 1
+      cpus: 6
+      ramRatio: "2"
+

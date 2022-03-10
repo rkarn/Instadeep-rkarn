@@ -141,7 +141,8 @@ def random_search(task_data, task_id=0):
         name="Random_ASNM_task"+str(task_id),
         verbose=1, 
         config=hyperparameter_space,
-        num_samples=num_samples)
+        num_samples=num_samples,
+        local_dir=os.environ.get("ICHOR_OUTPUT_DATASET"))
     time.sleep(1)
 
     assert len(analysis.trials) > 2, "Did you set the correct number of samples?"

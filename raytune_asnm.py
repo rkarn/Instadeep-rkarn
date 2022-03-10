@@ -134,7 +134,7 @@ def random_search(task_data, task_id=0):
         # according to the docs local_mode, if true, forces serial execution which is meant for debugging
         # unfortunately, it also allows requests for resources such as GPUs to subsequently ignore them without
         # any error or warning
-        ray.init()
+        ray.init(ignore_reinit_error=True)
     analysis = tune.run(
         tune_ASNM, 
         name="Random_ASNM_task"+str(task_id),
@@ -158,13 +158,16 @@ def random_search(task_data, task_id=0):
     tuned_model.summary()
     X_test = task_data[2]
     Y_test = task_data[3]
+    learning_rate = analysis.get_best_config(metric='keras_info/val_accuracy', mode='max')['lr']
+    optimizer = Adam(lr=learning_rate)
+    tuned_model.compile(optimizer, loss='categorical_crossentropy', metrics=['accuracy',f1_m,precision_m, recall_m])
     tuned_loss, tuned_accuracy, f1_score, precision, recall = tuned_model.evaluate(X_test, Y_test, verbose=0)
     print("Loss is {:0.4f}".format(tuned_loss))
     print("Tuned accuracy is {:0.4f}".format(tuned_accuracy))
     print ('F1-score = {0}'.format(f1_score))
     print ('Precision = {0}'.format(precision))
     print ('Recall = {0}'.format(recall))
-    return(analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    return(analysis.get_best_config(metric='keras_info/val_accuracy', mode='max'))
 
 #PBT population based sampling 
 def mutation_pbtsearch(task_data, task_id=0):
@@ -214,9 +217,9 @@ def mutation_pbtsearch(task_data, task_id=0):
     print("You can use any of the following columns to get the best model: \n{}.".format(
         [k for k in analysis.dataframe() if k.startswith("keras_info")]))
     print("=" * 10)
-    logdir = analysis.get_best_logdir("keras_info/val_acc", mode="max")
-    print('Best model:',analysis.get_best_trial(metric='keras_info/val_acc', mode='max'), 
-          analysis.get_best_config(metric='keras_info/val_acc', mode='max'))
+    logdir = analysis.get_best_logdir("keras_info/val_accuracy", mode="max")
+    print('Best model:',analysis.get_best_trial(metric='keras_info/val_accuracy', mode='max'), 
+          analysis.get_best_config(metric='keras_info/val_accuracy', mode='max'))
     # We saved the model as `model.h5` in the logdir of the trial.
     from tensorflow.keras.models import load_model
     tuned_model = load_model(logdir + "/model.h5", custom_objects =  {'f1_m': f1_m, 'precision_m': precision_m, 'recall_m': recall_m})
@@ -229,7 +232,7 @@ def mutation_pbtsearch(task_data, task_id=0):
     print ('F1-score = {0}'.format(f1_score))
     print ('Precision = {0}'.format(precision))
     print ('Recall = {0}'.format(recall))
-    return(analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    return(analysis.get_best_config(metric='keras_info/val_accuracy', mode='max'))
 
 #ASHA Schedular
 def ASHA_search(task_data, task_id=0):
@@ -282,7 +285,7 @@ def ASHA_search(task_data, task_id=0):
     print ('F1-score = {0}'.format(f1_score))
     print ('Precision = {0}'.format(precision))
     print ('Recall = {0}'.format(recall))
-    return(analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    return(analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
 
 
 #HyperOpt Search 
@@ -330,8 +333,8 @@ def hyperopt_search(task_data, task_id=0):
     print("You can use any of the following columns to get the best model: \n{}.".format(
         [k for k in analysis.dataframe() if k.startswith("keras_info")]))
     print("=" * 10)
-    logdir = analysis.get_best_logdir("keras_info/acc", mode="max")
-    print('Best model:', analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    logdir = analysis.get_best_logdir("keras_info/accuracy", mode="max")
+    print('Best model:', analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
     # We saved the model as `model.h5` in the logdir of the trial.
     from tensorflow.keras.models import load_model
     tuned_model = load_model(logdir + "/model.h5", custom_objects =  {'f1_m': f1_m, 'precision_m': precision_m, 'recall_m': recall_m})
@@ -344,7 +347,7 @@ def hyperopt_search(task_data, task_id=0):
     print ('F1-score = {0}'.format(f1_score))
     print ('Precision = {0}'.format(precision))
     print ('Recall = {0}'.format(recall))
-    return(analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    return(analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
 
 def BayesOptSearch(task_data, task_id=0):
     from ray.tune.schedulers import AsyncHyperBandScheduler
@@ -387,8 +390,8 @@ def BayesOptSearch(task_data, task_id=0):
     print("You can use any of the following columns to get the best model: \n{}.".format(
         [k for k in analysis.dataframe() if k.startswith("keras_info")]))
     print("=" * 10)
-    logdir = analysis.get_best_logdir("keras_info/acc", mode="max")
-    print('Best model:', analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    logdir = analysis.get_best_logdir("keras_info/accuracy", mode="max")
+    print('Best model:', analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
     # We saved the model as `model.h5` in the logdir of the trial.
     from tensorflow.keras.models import load_model
     tuned_model = load_model(logdir + "/model.h5", custom_objects =  {'f1_m': f1_m, 'precision_m': precision_m, 'recall_m': recall_m})
@@ -401,7 +404,7 @@ def BayesOptSearch(task_data, task_id=0):
     print ('F1-score = {0}'.format(f1_score))
     print ('Precision = {0}'.format(precision))
     print ('Recall = {0}'.format(recall))
-    return(analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    return(analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
 
 
 def NeverGradSearch(task_data, task_id=0):
@@ -445,8 +448,8 @@ def NeverGradSearch(task_data, task_id=0):
     print("You can use any of the following columns to get the best model: \n{}.".format(
         [k for k in analysis.dataframe() if k.startswith("keras_info")]))
     print("=" * 10)
-    logdir = analysis.get_best_logdir("keras_info/acc", mode="max")
-    print('Best model:', analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    logdir = analysis.get_best_logdir("keras_info/accuracy", mode="max")
+    print('Best model:', analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
     # We saved the model as `model.h5` in the logdir of the trial.
     from tensorflow.keras.models import load_model
     tuned_model = load_model(logdir + "/model.h5", custom_objects =  {'f1_m': f1_m, 'precision_m': precision_m, 'recall_m': recall_m})
@@ -459,7 +462,7 @@ def NeverGradSearch(task_data, task_id=0):
     print ('F1-score = {0}'.format(f1_score))
     print ('Precision = {0}'.format(precision))
     print ('Recall = {0}'.format(recall))
-    return(analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    return(analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
 
 def OptunaSearch(task_data, task_id=0):
     from ray.tune.suggest import ConcurrencyLimiter
@@ -499,8 +502,8 @@ def OptunaSearch(task_data, task_id=0):
     print("You can use any of the following columns to get the best model: \n{}.".format(
         [k for k in analysis.dataframe() if k.startswith("keras_info")]))
     print("=" * 10)
-    logdir = analysis.get_best_logdir("keras_info/acc", mode="max")
-    print('Best model:', analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    logdir = analysis.get_best_logdir("keras_info/accuracy", mode="max")
+    print('Best model:', analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
     # We saved the model as `model.h5` in the logdir of the trial.
     from tensorflow.keras.models import load_model
     tuned_model = load_model(logdir + "/model.h5", custom_objects =  {'f1_m': f1_m, 'precision_m': precision_m, 'recall_m': recall_m})
@@ -513,7 +516,7 @@ def OptunaSearch(task_data, task_id=0):
     print ('F1-score = {0}'.format(f1_score))
     print ('Precision = {0}'.format(precision))
     print ('Recall = {0}'.format(recall))
-    return(analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    return(analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
 
 def ZOOptSearch(task_data, task_id=0):
     from ray.tune.suggest.zoopt import ZOOptSearch
@@ -561,8 +564,8 @@ def ZOOptSearch(task_data, task_id=0):
     print("You can use any of the following columns to get the best model: \n{}.".format(
         [k for k in analysis.dataframe() if k.startswith("keras_info")]))
     print("=" * 10)
-    logdir = analysis.get_best_logdir("keras_info/acc", mode="max")
-    print('Best model:', analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    logdir = analysis.get_best_logdir("keras_info/accuracy", mode="max")
+    print('Best model:', analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
     # We saved the model as `model.h5` in the logdir of the trial.
     from tensorflow.keras.models import load_model
     tuned_model = load_model(logdir + "/model.h5", custom_objects =  {'f1_m': f1_m, 'precision_m': precision_m, 'recall_m': recall_m})
@@ -575,7 +578,7 @@ def ZOOptSearch(task_data, task_id=0):
     print ('F1-score = {0}'.format(f1_score))
     print ('Precision = {0}'.format(precision))
     print ('Recall = {0}'.format(recall))
-    return(analysis.get_best_config(metric='keras_info/acc', mode='max'))
+    return(analysis.get_best_config(metric='keras_info/accuracy', mode='max'))
 
 import pickle
 import pdb

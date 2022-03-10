@@ -4,7 +4,7 @@ docker:
   dockerfile: ./Dockerfile
   context: .
 spec:
-  command: "python main.py"
+  command: "python raytune_asnm.py"
   rayVersion: "v1.2.0"
   job:
     cpus: 2

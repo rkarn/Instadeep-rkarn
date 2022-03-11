@@ -6,11 +6,11 @@ docker:
   context: .
 spec:
   image: rkarn
-  command: sleep 3600
+  command: python raytune_asnm.py
   types:
     Worker:
       replicas: 1
-      cpus: 8
+      cpus: 12
       # optional: number of GPUs wanted
       gpus: 0
       gpuType: mig-1g.10gb

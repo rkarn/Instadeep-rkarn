@@ -1,26 +1,19 @@
-operator: ray
+# yaml-language-server: $schema=https://develop.ichor.kao.instadeep.io/schema/latest/manifest.schema.json
+operator: tf
 docker:
-  image: raytune-pong
+  image: rkarn
   dockerfile: ./Dockerfile
   context: .
 spec:
-  # command: "python raytune_asnm.py"
+  image: rkarn
   command: sleep 3600
-  rayVersion: "v1.2.0"
-  job:
-    cpus: 4
-    gpus: 0
-    ramRatio: "2"
-    gpuType: "gpu"
-    ports: []
-  head:
-    cpus: 8
-    gpus: 0
-    ramRatio: "3"
-    gpuType: "gpu"
-  workerPools:
-    - name: cpu-1
-      count: 1
-      cpus: 6
-      ramRatio: "2"
-
+  types:
+    Worker:
+      replicas: 1
+      cpus: 8
+      # optional: number of GPUs wanted
+      gpus: 0
+      gpuType: mig-1g.10gb
+      gpuProduct: A100-SXM-80GB
+      # mandatory (must be >= 2): RAM ratio wanted (in GB)
+      ramRatio: 2

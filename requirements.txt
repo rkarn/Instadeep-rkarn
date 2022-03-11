@@ -7,6 +7,7 @@ astunparse==1.6.3
 async-timeout==3.0.1
 atari-py==0.2.6
 attrs==20.3.0
+awscli
 blessings==1.7
 CacheControl==0.12.6
 cachetools==4.2.1

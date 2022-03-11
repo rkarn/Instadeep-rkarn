@@ -1,5 +1,6 @@
 import tensorflow.keras as keras
 from ray.tune import track
+from ray.tune import SyncConfig
 import numpy as np
 np.random.seed(0)
 

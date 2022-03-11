@@ -143,7 +143,7 @@ def random_search(task_data, task_id=0):
         verbose=1, 
         config=hyperparameter_space,
         num_samples=num_samples,
-        sync_config=SyncConfig(upload_dir="s3://rkarn-28d6244ed4c54337-inputs", sync_to_cloud="aws s3 sync {source} {target} --only-show-errors --endpoint-url http://minio-gateway.ichor:9000"))
+        sync_config=SyncConfig(upload_dir="gs://rkarn-28d6244ed4c54337-outputs")
     time.sleep(1)
 
     assert len(analysis.trials) > 2, "Did you set the correct number of samples?"

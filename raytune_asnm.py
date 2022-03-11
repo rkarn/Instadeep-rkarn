@@ -143,7 +143,7 @@ def random_search(task_data, task_id=0):
         verbose=1, 
         config=hyperparameter_space,
         num_samples=num_samples,
-        sync_config=SyncConfig(upload_dir="gs://rkarn-28d6244ed4c54337-outputs"))
+        sync_config=SyncConfig(upload_dir="gs://rkarn-28d6244ed4c54337-outputs", sync_to_driver=NamespacedKubernetesSyncer("rkarn-28d6244ed4c54337")))
     time.sleep(1)
 
     assert len(analysis.trials) > 2, "Did you set the correct number of samples?"

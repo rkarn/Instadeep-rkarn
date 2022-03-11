@@ -8,7 +8,7 @@ spec:
   command: sleep 3600
   rayVersion: "v1.2.0"
   job:
-    cpus: 2
+    cpus: 4
     gpus: 0
     ramRatio: "2"
     gpuType: "gpu"

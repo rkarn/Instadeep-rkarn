@@ -12,8 +12,6 @@ spec:
       replicas: 1
       cpus: 12
       # optional: number of GPUs wanted
-      gpus: 1
-      gpuType: mig-1g.10gb
-      gpuProduct: A100-SXM-80GB
+      gpus: 0
       # mandatory (must be >= 2): RAM ratio wanted (in GB)
       ramRatio: 2

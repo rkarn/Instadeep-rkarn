@@ -1,10 +1,11 @@
-# yaml-language-server: $schema=https://develop.ichor.kao.instadeep.io/schema/latest/manifest.schema.json
-operator: tf
+kind: IchorManifest
+version: 0.0.2
 docker:
   image: rkarn
   dockerfile: ./Dockerfile
   context: .
 spec:
+  operator: tf
   image: rkarn
   command: python raytune_asnm.py
   types:

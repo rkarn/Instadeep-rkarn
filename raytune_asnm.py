@@ -2,6 +2,7 @@ import tensorflow.keras as keras
 from ray.tune import track
 # from ray.tune import SyncConfig
 # from ray.tune.integration.kubernetes import NamespacedKubernetesSyncer
+import os
 import numpy as np
 np.random.seed(0)
 
@@ -95,7 +96,9 @@ def tune_ASNM(config):
 
     # Enable Tune to make intermediate decisions by using a Tune Callback hook. This is Keras specific.
     callbacks = [checkpoint_callback, TuneReporterCallback()]
-    task_dataset = pickle.load(open('/app/task_dataset.pkl', "rb"))
+    task_dataset_folder = os.environ.get("ICHOR_INPUT_DATASET", "/app")
+    task_dataset = pickle.load(open(os.path.join(task_dataset_folder, "task_dataset.pkl"), "rb"))
+    #task_dataset = pickle.load(open('/app/task_dataset.pkl', "rb"))
     X_train = task_dataset[0]
     Y_train = task_dataset[1]
     X_test = task_dataset[2]
@@ -652,7 +655,9 @@ for search_algo in [random_search,
     cpu_mem_collection.start()
     start_time = time.time()
     for task_id in range(0,num_tasks):
-        f = open('/app/task_dataset.pkl', 'wb')
+        task_dataset_folder = os.environ.get("ICHOR_INPUT_DATASET", "/app")
+        f = open(os.path.join(task_dataset_folder, "task_dataset.pkl"), "rb")
+        #f = open('/app/task_dataset.pkl', 'wb')
         pickle.dump(task_list[task_id], f)
         f.close()
         hyper_param = search_algo(task_list[task_id], task_id)
@@ -682,7 +687,10 @@ for search_algo in [random_search,
     end_time = time.time()
     print('Search algorithm {} took {}.'.format(search_algo.__name__, end_time - start_time))
     
-    f=open("time_taken.txt", "a+")
+    from pathlib import Path  
+    f_folder = Path(os.environ["ICHOR_OUTPUT_DATASET"]).mkdir(exist_ok=True) 
+    f=open(f_folder/"time_taken.txt", "a+")
+    #f=open("time_taken.txt", "a+")
     f.write('Time taken for algo {} is {}. \n'.format(search_algo.__name__, end_time-start_time))
 
 

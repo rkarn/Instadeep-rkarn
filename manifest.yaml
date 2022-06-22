@@ -7,7 +7,7 @@ docker:
 spec:
   operator: tf
   image: rkarn
-  command: python sample_read_write.py
+  command: python raytune_asnm.py
   types:
     Worker:
       replicas: 1

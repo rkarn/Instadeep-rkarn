@@ -656,7 +656,7 @@ for search_algo in [random_search,
     start_time = time.time()
     for task_id in range(0,num_tasks):
         task_dataset_folder = os.environ.get("ICHOR_INPUT_DATASET", "/app")
-        f = open(os.path.join(task_dataset_folder, "task_dataset.pkl"), "rb")
+        f = open(os.path.join(task_dataset_folder, "task_dataset.pkl"), "wb")
         #f = open('/app/task_dataset.pkl', 'wb')
         pickle.dump(task_list[task_id], f)
         f.close()

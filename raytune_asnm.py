@@ -688,7 +688,7 @@ for search_algo in [random_search,
     print('Search algorithm {} took {}.'.format(search_algo.__name__, end_time - start_time))
     
     from pathlib import Path  
-    f_folder = Path(os.environ["ICHOR_OUTPUT_DATASET"]).mkdir(exist_ok=True) 
+    f_folder = Path(os.environ["ICHOR_INPUT_DATASET"])
     f=open(f_folder/"time_taken.txt", "a+")
     #f=open("time_taken.txt", "a+")
     f.write('Time taken for algo {} is {}. \n'.format(search_algo.__name__, end_time-start_time))

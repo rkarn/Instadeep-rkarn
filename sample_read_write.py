@@ -8,6 +8,6 @@ file_content = f.readlines()
 print(file_content)
 f.close()
 
-f = open(file_path_write, 'w')
+f = open(file_path_write, 'w+')
 f.write('Hello World. I have written succesfully.')
 f.close

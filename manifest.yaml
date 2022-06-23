@@ -7,7 +7,7 @@ docker:
 spec:
   operator: tf
   image: rkarn
-  command: python raytune_asnm.py
+  command: python malnet_processing.py
   types:
     Worker:
       replicas: 1

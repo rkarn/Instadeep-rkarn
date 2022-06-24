@@ -28,5 +28,5 @@ train_dataset = {}
 train_dataset['X_train'] = X_train
 train_dataset['Y_train_fine'] = Y_train_fine
 train_dataset['Y_train_coarse'] = Y_train_coarse
-with open(file_path_read/"malnet_train", "w+") as fp:  
+with open(file_path_read/"malnet_train", "wb+") as fp:  
     pickle.dump(train_dataset, fp)        

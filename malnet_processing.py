@@ -14,14 +14,14 @@ X_train = []
 Y_train_fine = []
 Y_train_coarse = []
 for dirs in train_dir:
-    for sub_class in os.listdir(train_dir/dirs):
-        for image_file in os.listdir(train_dir/dirs/sub_class):
-            im = Image.open(train_dir/dirs/image_file, 'r')
+    for sub_class in os.listdir(train_dir+'/'+dirs):
+        for image_file in os.listdir(train_dir+'/'+dirs+'/'+sub_class):
+            im = Image.open(train_dir+'/'+dirs+'/'+sub_class + '/' + image_file, 'r')
             print(f'Processing for dir {dirs}, subdir {sub_class}, file {image_file}.')
             X_train.append(np.asarray(im))
             Y_train_fine.append(sub_class)
             Y_train_coarse.append(dirs)
-            
+
 import pickle
 train_dataset = {}
 train_dataset['X_train'] = X_train

@@ -1,12 +1,13 @@
 import os
 from pathlib import Path
+import pdb
 
 file_path_read = Path(os.environ["ICHOR_INPUT_DATASET"]) / "malnet-images-tiny" 
 print('The details of the train directory files.',os.listdir(file_path_read/"train"))
 print('The details of the test directory files.',os.listdir(file_path_read/"test"))
 print('The details of the val directory files.',os.listdir(file_path_read/"val"))
-
-
+print(type(Path(os.environ["ICHOR_INPUT_DATASET"])), Path(os.environ["ICHOR_INPUT_DATASET"]), type(file_path_read), file_path_read )
+pdb.set_trace()
 train_dir = os.listdir(file_path_read/"train")
 test_dir = os.listdir(file_path_read/"test")
 val_dir = os.listdir(file_path_read/"val")

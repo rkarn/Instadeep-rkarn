@@ -22,11 +22,12 @@ for dirs in os.listdir(train_dir):
             X_train.append(np.asarray(im))
             Y_train_fine.append(sub_class)
             Y_train_coarse.append(dirs)
-
+print('Completed processing for training dataset.')
 import pickle
 train_dataset = {}
 train_dataset['X_train'] = X_train
 train_dataset['Y_train_fine'] = Y_train_fine
 train_dataset['Y_train_coarse'] = Y_train_coarse
+print('Now pickling.')
 with open(file_path_read/"malnet_train", "wb+") as fp:  
     pickle.dump(train_dataset, fp)        

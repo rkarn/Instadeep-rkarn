@@ -7,7 +7,7 @@ docker:
 spec:
   operator: tf
   image: rkarn
-  command: python malnet_processing.py 
+  command: python malnet_processing_test.py
   types:
     Worker:
       replicas: 1

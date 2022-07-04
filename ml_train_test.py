@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import pickle
 
 train_data_file = Path(os.environ["ICHOR_INPUT_DATASET"]) / 'malnet-images-tiny' / 'malnet_train'

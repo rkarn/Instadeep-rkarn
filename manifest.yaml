@@ -7,7 +7,7 @@ docker:
 spec:
   operator: tf
   image: rkarn
-  command: python sample_read_write.py
+  command: python ml_train_test.py
   types:
     Worker:
       replicas: 1

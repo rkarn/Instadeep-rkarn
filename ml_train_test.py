@@ -21,3 +21,8 @@ Y_test_coarse = np.array(test_data['Y_test_coarse'])
 
 print('Train set', X_train.shape, Y_train_fine.shape, Y_train_coarse.shape)
 print('Test set', X_test.shape, Y_test_fine.shape, Y_test_coarse.shape)
+
+print('Normalizaing.')
+X_train=X_train/255.0
+X_test=X_test/255.0
+X_val=X_val/255.0

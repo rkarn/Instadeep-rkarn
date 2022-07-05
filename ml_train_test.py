@@ -14,9 +14,9 @@ test_data_file = Path(os.environ["ICHOR_INPUT_DATASET"]) / 'malnet-images-tiny' 
 with open(test_data_file, 'rb') as pickle_file_test:
     test_data = pickle.load(pickle_file_test)
 print('Test pickle file loaded.')
-X_test = train_data['X_test']
-Y_test_fine = train_data['Y_test_fine']
-Y_test_coarse = train_data['Y_test_coarse']
+X_test = test_data['X_test']
+Y_test_fine = test_data['Y_test_fine']
+Y_test_coarse = test_data['Y_test_coarse']
 
 print('Train set', X_train.shape, Y_train_fine.shape, Y_train_coarse.shape)
 print('Test set', X_test.shape, Y_test_fine.shape, Y_test_coarse.shape)

@@ -26,3 +26,71 @@ print('Normalizaing.')
 X_train=X_train/255.0
 X_test=X_test/255.0
 X_val=X_val/255.0
+
+
+import keras
+from keras.models import Sequential
+from keras import datasets, layers, models
+from keras.utils import np_utils
+from keras import regularizers
+from keras.layers import Dense, Dropout, BatchNormalization
+
+from sklearn import preprocessing
+le = preprocessing.LabelEncoder()
+le.fit_transform(Y_train)
+Y_train = le.transform(Y_train)
+Y_test = le.transform(Y_test)
+Y_val = le.transform(Y_val)
+
+le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
+print(le_name_mapping)
+num_classes = max(le_name_mapping.values())+1
+print(f'Number of classes = {num_classes}')
+
+model = Sequential()
+
+model.add(layers.Conv2D(32, (3,3), padding='same', activation='relu', input_shape=(256,256,3)))
+model.add(layers.BatchNormalization())
+model.add(layers.Conv2D(256, (3,3), padding='same', activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.MaxPooling2D(pool_size=(2,2)))
+model.add(layers.Dropout(0.3))
+
+model.add(layers.Conv2D(64, (3,3), padding='same', activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.Conv2D(64, (3,3), padding='same', activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.MaxPooling2D(pool_size=(2,2)))
+model.add(layers.Dropout(0.5))
+
+model.add(layers.Conv2D(128, (3,3), padding='same', activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.Conv2D(128, (3,3), padding='same', activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.MaxPooling2D(pool_size=(2,2)))
+model.add(layers.Dropout(0.5))
+
+model.add(layers.Flatten())
+model.add(layers.Dense(128, activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.Dropout(0.5))
+model.add(layers.Dense(num_classes, activation='softmax'))    # num_classes = 10
+
+# Checking the model summary
+print(model.summary())
+
+Y_train = np_utils.to_categorical(Y_train, num_classes)
+Y_test = np_utils.to_categorical(Y_test, num_classes)
+Y_val = np_utils.to_categorical(Y_val, num_classes)
+
+model.compile(optimizer='adam', loss=keras.losses.categorical_crossentropy, metrics=['accuracy'])
+history = model.fit(X_train, Y_train, batch_size=64, epochs=100,
+                    validation_data=(X_val, Y_val))
+
+pred = model.predict(X_test)
+print(pred)
+
+# Converting the predictions into label index 
+pred_classes = np.argmax(pred, axis=1)
+print('Encoded classes predicted',pred_classes)
+print('Natural label predicted', le.inverse_transform(pred_classes))

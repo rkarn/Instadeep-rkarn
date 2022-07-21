@@ -22,6 +22,11 @@ Y_test_coarse = np.array(test_data['Y_test_coarse'])
 print('Train set', X_train.shape, Y_train_fine.shape, Y_train_coarse.shape)
 print('Test set', X_test.shape, Y_test_fine.shape, Y_test_coarse.shape)
 
+print('Working with samll dataset and Y_coarse')
+from sklearn.model_selection import train_test_split
+X_train, _, Y_train, _ = train_test_split(X_train, Y_train_coarse, test_size=0.6, random_state=42)
+_, X_test, _, Y_test = train_test_split(X_test, Y_test_coarse, test_size=0.4, random_state=42)
+
 print('Normalizaing.')
 X_train=X_train/255.0
 X_test=X_test/255.0

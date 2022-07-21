@@ -3,6 +3,13 @@ from pathlib import Path
 import pickle
 import numpy as np
 
+from tensorflow import keras
+from keras.models import Sequential
+from keras import datasets, layers, models
+from keras.utils import np_utils
+from keras import regularizers
+from keras.layers import Dense, Dropout, BatchNormalization
+
 train_data_file = Path(os.environ["ICHOR_INPUT_DATASET"]) / 'malnet-images-tiny' / 'malnet_train'
 with open(train_data_file, 'rb') as pickle_file_train:
     train_data = pickle.load(pickle_file_train)
@@ -22,7 +29,7 @@ Y_test_coarse = np.array(test_data['Y_test_coarse'])
 print('Train set', X_train.shape, Y_train_fine.shape, Y_train_coarse.shape)
 print('Test set', X_test.shape, Y_test_fine.shape, Y_test_coarse.shape)
 
-print('Working with samll dataset and Y_coarse')
+print('Working with small dataset and Y_coarse')
 from sklearn.model_selection import train_test_split
 X_train, _, Y_train, _ = train_test_split(X_train, Y_train_coarse, test_size=0.9, random_state=42)
 _, X_test, _, Y_test = train_test_split(X_test, Y_test_coarse, test_size=0.1, random_state=42)
@@ -31,13 +38,6 @@ print('Normalizaing.')
 X_train=X_train/255.0
 X_test=X_test/255.0
 
-
-import keras
-from keras.models import Sequential
-from keras import datasets, layers, models
-from keras.utils import np_utils
-from keras import regularizers
-from keras.layers import Dense, Dropout, BatchNormalization
 
 from sklearn import preprocessing
 le = preprocessing.LabelEncoder()

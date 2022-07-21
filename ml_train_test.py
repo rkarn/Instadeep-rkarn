@@ -24,13 +24,12 @@ print('Test set', X_test.shape, Y_test_fine.shape, Y_test_coarse.shape)
 
 print('Working with samll dataset and Y_coarse')
 from sklearn.model_selection import train_test_split
-X_train, _, Y_train, _ = train_test_split(X_train, Y_train_coarse, test_size=0.6, random_state=42)
-_, X_test, _, Y_test = train_test_split(X_test, Y_test_coarse, test_size=0.4, random_state=42)
+X_train, _, Y_train, _ = train_test_split(X_train, Y_train_coarse, test_size=0.9, random_state=42)
+_, X_test, _, Y_test = train_test_split(X_test, Y_test_coarse, test_size=0.1, random_state=42)
 
 print('Normalizaing.')
 X_train=X_train/255.0
 X_test=X_test/255.0
-X_val=X_val/255.0
 
 
 import keras
@@ -45,7 +44,6 @@ le = preprocessing.LabelEncoder()
 le.fit_transform(Y_train)
 Y_train = le.transform(Y_train)
 Y_test = le.transform(Y_test)
-Y_val = le.transform(Y_val)
 
 le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
 print(le_name_mapping)
@@ -86,11 +84,10 @@ print(model.summary())
 
 Y_train = np_utils.to_categorical(Y_train, num_classes)
 Y_test = np_utils.to_categorical(Y_test, num_classes)
-Y_val = np_utils.to_categorical(Y_val, num_classes)
 
 model.compile(optimizer='adam', loss=keras.losses.categorical_crossentropy, metrics=['accuracy'])
 history = model.fit(X_train, Y_train, batch_size=64, epochs=100,
-                    validation_data=(X_val, Y_val))
+                    validation_data=(X_test, Y_test))
 
 pred = model.predict(X_test)
 print(pred)

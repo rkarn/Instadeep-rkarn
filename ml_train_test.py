@@ -4,11 +4,11 @@ import pickle
 import numpy as np
 
 from tensorflow import keras
-from keras.models import Sequential
-from keras import datasets, layers, models
-from keras.utils import np_utils
-from keras import regularizers
-from keras.layers import Dense, Dropout, BatchNormalization
+from tensorflow.keras.models import Sequential
+from tensorflow.keras import datasets, layers, models
+from tensorflow.keras.utils import np_utils
+from tensorflow.keras import regularizers
+from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
 
 train_data_file = Path(os.environ["ICHOR_INPUT_DATASET"]) / 'malnet-images-tiny' / 'malnet_train'
 with open(train_data_file, 'rb') as pickle_file_train:

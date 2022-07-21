@@ -6,7 +6,7 @@ import numpy as np
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras import datasets, layers, models
-from tensorflow.keras.utils import np_utils
+from keras.utils import np_utils
 from tensorflow.keras import regularizers
 from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
 

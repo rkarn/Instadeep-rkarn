@@ -86,7 +86,7 @@ Y_train = np_utils.to_categorical(Y_train, num_classes)
 Y_test = np_utils.to_categorical(Y_test, num_classes)
 
 model.compile(optimizer='adam', loss=keras.losses.categorical_crossentropy, metrics=['accuracy'])
-history = model.fit(X_train, Y_train, batch_size=64, epochs=100,
+history = model.fit(X_train, Y_train, batch_size=32, epochs=10,
                     validation_data=(X_test, Y_test))
 
 pred = model.predict(X_test)

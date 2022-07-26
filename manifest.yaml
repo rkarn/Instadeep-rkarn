@@ -3,7 +3,7 @@ kind: IchorManifest
 version: 0.0.2
 docker:
   image: rag-net-v2
-  dockerfile: ./Dockerfile
+  dockerfile: ./Dockerfile_jupyter
   context: .
 spec:
   operator: tf

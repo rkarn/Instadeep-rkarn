@@ -4,3 +4,4 @@ WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1
 ADD . .
+RUN jupyter notebook

@@ -2,6 +2,5 @@ FROM  jupyter/datascience-notebook
 
 WORKDIR /app
 
-RUN apt-get update && apt install cmake libgl1-mesa-dev -y
 ENV PYTHONUNBUFFERED=1
 ADD . .

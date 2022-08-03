@@ -1,4 +1,5 @@
-FROM  jupyter/datascience-notebook
+#FROM  jupyter/datascience-notebook
+FROM tensorflow/tensorflow
 
 WORKDIR /app
 
